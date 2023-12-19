@@ -1,62 +1,44 @@
-def isEuler():
-    allVisited = True
-    for e in visited:
-        if e == 0:
-            allVisited = False
-    if allVisited:
-        if queue[0] == queue[len(queue) - 1]:
-            return 1
-        else:
-            return 2
-    return 0
+from collections import defaultdict
 
 
-def printPath(flag):
-    if flag == 1:
-        print("是欧拉回路:", end="")
-    else:
-        print("是欧拉道路:", end="")
-    for i in range(len(queue)):
-        if i < len(queue) - 1:
-            print(queue[i], "-> ", end="")
-        else:
-            print(queue[i])
+def has_eulerian_circuit(graph):
+    # 统计每个节点的出度和入度
+    degrees = defaultdict(int)
+    for u in graph:
+        for v in graph[u]:
+            degrees[u] += 1
+            degrees[v] -= 1
+
+    # 检查每个节点的出度和入度是否相等
+    for degree in degrees.values():
+        if degree != 0:
+            return False
+
+    # 检查图是否连通
+    visited = set()
+    stack = [next(iter(graph))]
+    while stack:
+        node = stack.pop()
+        visited.add(node)
+        for neighbor in graph[node]:
+            if neighbor not in visited:
+                stack.append(neighbor)
+
+    return len(visited) == len(graph)
 
 
-def dfs(x):
-    queue.append(x)
-    flag = isEuler()
-    if flag > 0:
-        eulerFlag = True
-        printPath(flag)
-    for i in range(len(eulerEdges)):
-        if visited[i]:
-            continue
-        visited[i] = 1
-        if eulerEdges[i][0] == x:
-            dfs(eulerEdges[i][1])
-            queue.pop()
-            visited[i] = 0
-        elif eulerEdges[i][1] == x:
-            dfs(eulerEdges[i][0])
-            queue.pop()
-            visited[i] = 0
+# 测试示例
+graph1 = {
+    0: [1, 2],
+    1: [0, 2],
+    2: [0, 1]
+}
+print(has_eulerian_circuit(graph1))  # 输出: True
 
-
-eulerEdges = [
-    (1, 2),
-    (1, 2),
-    (1, 0),
-    (2, 0),
-    (2, 3),
-    (2, 3),
-    (3, 0)
-]
-queue = []
-visited = [0 for _ in range(len(eulerEdges))]
-eulerFlag = False
-start = 1
-
-dfs(start)
-if not eulerFlag:
-    print("不是欧拉回路或欧拉道路")
+graph2 = {
+    0: [1],
+    1: [0, 2, 3],
+    2: [1],
+    3: [1]
+}
+print(has_eulerian_circuit(graph2))  # 输出: True

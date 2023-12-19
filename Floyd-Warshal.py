@@ -42,7 +42,7 @@ for u, v, c in datas:
     graph[u - 1][v - 1] = c  # 因为是有向图，边权只赋给graph[u][v]
     # graph[v][u] = c # 如果是无向图，要加上这条。
 floyd()
-'''
+
 print('Weight:')
 for row in graph:
     for e in row:
@@ -50,7 +50,7 @@ for row in graph:
     print()
 print()
 print('Path:')
-'''
+
 for i in range(n):
     for j in range(n):
         print('Path({}->{}): '.format(i + 1, j + 1), end='')
