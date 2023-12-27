@@ -7,9 +7,7 @@ import sys
 
 class Solution:
     type = 0
-
     h, ne, e, idx, used, res = None, None, None, None, None, None
-
     # 加边函数
     def add(self, a: int, b: int):
         self.e[self.idx] = b
