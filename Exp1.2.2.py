@@ -9,8 +9,7 @@ ba = ''  # 符号后的部分
 
 def myinput():  # 输入所求命题式子
     global aInput
-    print(
-        "请输入一个任意命题公式（'~'表示非，'&'表示合取,'|'表示析取，'>'表示条件,'<'表示双条件，'@'表示异或，可以有括号哦！):")
+    print("请输入一个任意命题公式（'!'表示非，'&'表示合取,'|'表示析取，'>'表示条件,'<'表示双条件，'@'表示异或，可以有括号哦):")
     aInput = input()
 
 
@@ -20,7 +19,7 @@ def getva():  # 获取其中每一部分
         if c >= 'A' and c <= 'Z' or c >= 'a' and c <= 'z':
             if c not in va:
                 va.append(c)
-            elif c != '~' and c != '&' and c != '|' and c != '(' and c != ')' and c != '>' and c != '<' and c != '@':
+            elif c != '!' and c != '&' and c != '|' and c != '(' and c != ')' and c != '>' and c != '<' and c != '@':
                 print('输入错误!')
     va = sorted(va)
 
@@ -36,7 +35,7 @@ def getFB(c):
                 flag = 1
                 j = i - 1
                 while flag != 0:
-                    if aHuajian[j] == '~':
+                    if aHuajian[j] == '!':
                         j -= 1
                     if aHuajian[j] == '(':
                         flag -= 1
@@ -50,7 +49,7 @@ def getFB(c):
                 flag = 1
                 j = i + 2
                 while flag != 0:
-                    if aHuajian[j] == '~':
+                    if aHuajian[j] == '!':
                         j += 1
                     if aHuajian[j] == ')':
                         flag -= 1
@@ -59,12 +58,12 @@ def getFB(c):
                     j += 1
                 ba = aHuajian[i + 1:j]
             if c == '>':
-                aHuajian = aHuajian.replace(fo + '>' + ba, '(' + '~' + fo + '|' + ba + ')')
+                aHuajian = aHuajian.replace(fo + '>' + ba, '(' + '!' + fo + '|' + ba + ')')
             elif c == '<':
-                aHuajian = aHuajian.replace(fo + '<' + ba, '(' + fo + '&' + ba + ')|(~' + fo + '&~' + ba + ')')
+                aHuajian = aHuajian.replace(fo + '<' + ba, '(' + fo + '&' + ba + ')|(!' + fo + '&!' + ba + ')')
             elif c == '@':
                 aHuajian = aHuajian.replace(fo + '@' + ba,
-                                            '~(' + '(' + fo + '&' + ba + ')|(~' + fo + '&~' + ba + ')' + ')')
+                                            '!(' + '(' + fo + '&' + ba + ')|(!' + fo + '&!' + ba + ')' + ')')
 
 
 def huajianinput():
@@ -80,7 +79,7 @@ def cal():
     vlen = len(va)  # 变量个数
     n = 2 ** vlen  # 所有情况个数
     print('真值表如下图所示：')
-    print(va, aInput + '即', aHuajian)
+    print(' '.join(va), aInput + '即', aHuajian)
     for n1 in range(0, n):  # 遍历所有的情况
         value = []  # 数值
         j = n1  # 真值表当前行
@@ -101,30 +100,14 @@ def cal():
             xiqu.append(n1)
         else:
             hequ.append(n1)
-        print(value, result)
+        print(' '.join(value), result)
 
 
-# def outprint():
-#     print('主析取范式：')
-#     print('求和', xiqu, sep='')
-#     print('主合取范式：')
-#     print('求积', hequ, sep='')
 def outprint():
-    global va, xiqu, hequ
     print('主析取范式：')
-    xiqu_terms = []
-    for i in xiqu:
-        s = bin(i)[2:].zfill(len(va))
-        terms = [f'!{va[j]}' if s[j] == '0' else va[j] for j in range(len(va))]
-        xiqu_terms.append('(' + '&'.join(terms) + ')')
-    print('+'.join(xiqu_terms))
+    print(' + '.join([''.join(va[i] if (n>>i)&1 else '!'+va[i] for i in range(len(va))) for n in xiqu]))
     print('主合取范式：')
-    hequ_terms = []
-    for i in hequ:
-        s = bin(i)[2:].zfill(len(va))
-        terms = [f'!{va[j]}' if s[j] == '0' else va[j] for j in range(len(va))]
-        hequ_terms.append('(' + '&'.join(terms) + ')')
-    print('*'.join(hequ_terms))
+    print(' * '.join([''.join(va[i] if (n>>i)&1 else '!'+va[i] for i in range(len(va))) for n in hequ]))
 
 
 def main():
@@ -137,6 +120,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-

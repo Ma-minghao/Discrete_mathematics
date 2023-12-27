@@ -47,6 +47,7 @@ parents = [[i + 1] * n for i in range(n)]  # 关键地方，i-->j 的父结点�
 for u, v, c in datas:
     graph[u - 1][v - 1] = c  # 因为是有向图，边权只赋给graph[u][v]
     # graph[v][u] = c # 如果是无向图，要加上这条。
+
 floyd()
 
 print('Weight:')
